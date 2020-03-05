@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/dreadl0ck/go-dpi/modules/wrappers"
+	"log"
 	"os"
 	"os/signal"
 	"time"
@@ -17,20 +19,18 @@ import (
 func main() {
 	var (
 		count, idCount int
-		protoCounts    map[types.Protocol]int
 		packetChannel  <-chan gopacket.Packet
 		err            error
+		protoCounts = make(map[types.Protocol]int)
+		filename = flag.String("r", "godpi_example/dumps/http.cap", "File to read packets from")
+		device = flag.String("device", "", "Device to watch for packets")
 	)
-
-	protoCounts = make(map[types.Protocol]int)
-	filename := flag.String("filename", "godpi_example/dumps/http.cap", "File to read packets from")
-	device := flag.String("device", "", "Device to watch for packets")
 
 	flag.Parse()
 
 	if *device != "" {
 		// check if interface was given
-		handle, deverr := pcap.OpenLive(*device, 1024, false, time.Duration(-1))
+		handle, deverr := pcap.OpenLive(*device, 1514, false, time.Duration(-1))
 		if deverr != nil {
 			fmt.Println("Error opening device:", deverr)
 			return
@@ -49,11 +49,24 @@ func main() {
 		for _, err := range initErrs {
 			fmt.Println(err)
 		}
-		return
+	}
+
+	nDPI := wrappers.NewNDPIWrapper()
+	switch errCode := nDPI.InitializeWrapper(); errCode {
+	case 0:
+		// all good
+		fmt.Println("nDPI OK")
+	case -0x1000: // errorLibraryDisabled
+		// do nothing if library is disabled
+		log.Fatal("nDPI is disabled")
+	default:
+		log.Fatal("nDPI initialization returned error code: ", errCode)
 	}
 
 	defer func() {
-		godpi.Destroy()
+		if err := nDPI.DestroyWrapper(); err != nil {
+			fmt.Println(err)
+		}
 		fmt.Println()
 		fmt.Println("Number of packets:", count)
 		fmt.Println("Number of packets identified:", idCount)
