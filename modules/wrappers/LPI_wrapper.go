@@ -3,14 +3,14 @@ package wrappers
 // #include "wrappers_config.h"
 // #ifndef DISABLE_LPI
 // #cgo CXXFLAGS: -std=c++11
-// #cgo LDFLAGS: -L/usr/lib -L/usr/local/lib -L${SRCDIR} -Wl,-Bdynamic -lprotoident -ltrace
+// #cgo LDFLAGS: -L/usr/lib -L/usr/local/lib -L${SRCDIR} -lprotoident -ltrace
 // #endif
 // #include "LPI_wrapper_impl.hpp"
 import "C"
 import (
 	"unsafe"
 
-	"github.com/mushorg/go-dpi/types"
+	"github.com/dreadl0ck/go-dpi/types"
 )
 
 // lpiCodeToProtocol maps the LPI protocol codes to go-dpi protocols.

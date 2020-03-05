@@ -4,10 +4,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/google/gopacket"
-	"github.com/mushorg/go-dpi/types"
-	"github.com/mushorg/go-dpi/utils"
 	"unsafe"
+
+	"github.com/dreadl0ck/gopacket"
+	"github.com/dreadl0ck/go-dpi/types"
+	"github.com/dreadl0ck/go-dpi/utils"
 )
 
 func TestNewNDPIWrapper(t *testing.T) {

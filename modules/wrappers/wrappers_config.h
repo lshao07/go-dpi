@@ -9,7 +9,7 @@
 /**
  * Uncomment the line below to disable compiling with nDPI.
  */
-// #define DISABLE_NDPI
+#define DISABLE_NDPI
 
 /**
  * Uncomment the line below to disable compiling with libprotoident.

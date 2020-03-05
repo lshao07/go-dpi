@@ -3,7 +3,7 @@ package wrappers
 import (
 	"testing"
 
-	"github.com/mushorg/go-dpi/types"
+	"github.com/dreadl0ck/go-dpi/types"
 )
 
 type MockWrapper struct {

@@ -2,14 +2,14 @@ package wrappers
 
 // #include "wrappers_config.h"
 // #cgo CFLAGS: -I/usr/local/include/
-// #cgo LDFLAGS: -Wl,-Bstatic -lndpi -Wl,-Bdynamic -lpcap -lm -pthread
+// #cgo LDFLAGS: -lndpi -lpcap -lm -pthread
 // #include "nDPI_wrapper_impl.h"
 import "C"
 import (
 	"unsafe"
 
-	"github.com/google/gopacket"
-	"github.com/mushorg/go-dpi/types"
+	"github.com/dreadl0ck/gopacket"
+	"github.com/dreadl0ck/go-dpi/types"
 	"github.com/pkg/errors"
 )
 
@@ -57,7 +57,7 @@ func getPacketNdpiData(packet gopacket.Packet) (pktHeader C.struct_pcap_pkthdr, 
 	capLen := packet.Metadata().CaptureLength
 	packetLen := packet.Metadata().Length
 	pktDataSlice := packet.Data()
-	pktHeader.ts.tv_sec = C.__time_t(seconds)
+	pktHeader.ts.tv_sec = C.long(seconds)
 	pktHeader.ts.tv_usec = 0
 	pktHeader.caplen = C.bpf_u_int32(capLen)
 	pktHeader.len = C.bpf_u_int32(packetLen)
