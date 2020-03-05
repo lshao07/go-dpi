@@ -1,10 +1,11 @@
 package classifiers
 
 import (
-	"github.com/google/gopacket"
-	"github.com/google/gopacket/layers"
-	"github.com/mushorg/go-dpi/types"
 	"regexp"
+
+	"github.com/dreadl0ck/gopacket"
+	"github.com/dreadl0ck/gopacket/layers"
+	"github.com/dreadl0ck/go-dpi/types"
 )
 
 // JABBERClassifier struct

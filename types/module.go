@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/mushorg/go-dpi/utils"
+	"github.com/dreadl0ck/go-dpi/utils"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"path"

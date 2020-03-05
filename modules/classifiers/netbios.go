@@ -3,9 +3,10 @@ package classifiers
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/google/gopacket"
-	"github.com/google/gopacket/layers"
-	"github.com/mushorg/go-dpi/types"
+
+	"github.com/dreadl0ck/gopacket"
+	"github.com/dreadl0ck/gopacket/layers"
+	"github.com/dreadl0ck/go-dpi/types"
 )
 
 // NetBIOSClassifier struct

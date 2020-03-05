@@ -2,15 +2,16 @@
 package ml
 
 import (
-	"github.com/google/gopacket/layers"
-	"github.com/mushorg/go-dpi/types"
-	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 	"unsafe"
+
+	"github.com/dreadl0ck/gopacket/layers"
+	"github.com/dreadl0ck/go-dpi/types"
+	"github.com/pkg/errors"
 )
 
 // #cgo LDFLAGS: -llinear
@@ -192,8 +193,8 @@ func (module *LinearSVCModule) ClassifyFlowAll(flow *types.Flow) []types.Classif
 // and the classification threshold is 0.8.
 func NewLinearSVCModule() *LinearSVCModule {
 	return &LinearSVCModule{
-		TCPModelPath: "https://raw.githubusercontent.com/wiki/mushorg/go-dpi/2grams_tcp.model",
-		UDPModelPath: "https://raw.githubusercontent.com/wiki/mushorg/go-dpi/2grams_udp.model",
+		TCPModelPath: "https://raw.githubusercontent.com/wiki/dreadl0ck/go-dpi/2grams_tcp.model",
+		UDPModelPath: "https://raw.githubusercontent.com/wiki/dreadl0ck/go-dpi/2grams_udp.model",
 		Threshold:    0.8,
 	}
 }

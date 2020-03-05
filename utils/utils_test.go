@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"github.com/google/gopacket/layers"
 	"testing"
+
+	"github.com/dreadl0ck/gopacket/layers"
 )
 
 func TestReadDumpFile(t *testing.T) {

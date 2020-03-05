@@ -3,9 +3,9 @@ package types
 import (
 	"testing"
 
-	"github.com/google/gopacket"
-	"github.com/google/gopacket/layers"
-	"github.com/mushorg/go-dpi/utils"
+	"github.com/dreadl0ck/gopacket"
+	"github.com/dreadl0ck/gopacket/layers"
+	"github.com/dreadl0ck/go-dpi/utils"
 )
 
 func TestNewFlow(t *testing.T) {

@@ -2,12 +2,13 @@
 package godpi
 
 import (
-	"github.com/google/gopacket"
-	"github.com/mushorg/go-dpi/modules/classifiers"
-	"github.com/mushorg/go-dpi/modules/ml"
-	"github.com/mushorg/go-dpi/modules/wrappers"
-	"github.com/mushorg/go-dpi/types"
 	"time"
+
+	"github.com/dreadl0ck/gopacket"
+	"github.com/dreadl0ck/go-dpi/modules/classifiers"
+	"github.com/dreadl0ck/go-dpi/modules/ml"
+	"github.com/dreadl0ck/go-dpi/modules/wrappers"
+	"github.com/dreadl0ck/go-dpi/types"
 )
 
 var activatedModules []types.Module

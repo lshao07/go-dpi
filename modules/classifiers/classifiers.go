@@ -3,8 +3,8 @@
 package classifiers
 
 import (
-	"github.com/google/gopacket"
-	"github.com/mushorg/go-dpi/types"
+	"github.com/dreadl0ck/gopacket"
+	"github.com/dreadl0ck/go-dpi/types"
 )
 
 // GoDPIName is the name of the library, to be used as an identifier for the
