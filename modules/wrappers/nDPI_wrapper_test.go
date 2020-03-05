@@ -6,9 +6,9 @@ import (
 
 	"unsafe"
 
-	"github.com/dreadl0ck/gopacket"
 	"github.com/dreadl0ck/go-dpi/types"
 	"github.com/dreadl0ck/go-dpi/utils"
+	"github.com/dreadl0ck/gopacket"
 )
 
 func TestNewNDPIWrapper(t *testing.T) {
@@ -31,7 +31,7 @@ func TestNDPIWrapperClassification(t *testing.T) {
 		defer wrapper.DestroyWrapper()
 		result, err := wrapper.ClassifyFlow(flow)
 		if result != types.HTTP || err != nil {
-			t.Errorf("Incorrectly detected flow protocol: %v instead of HTTP", result)
+			t.Errorf("Incorrectly detected flow protocol: %v instead of HTTP, error: %v", result, err)
 		}
 	case errorLibraryDisabled:
 		// do nothing if library is disabled
