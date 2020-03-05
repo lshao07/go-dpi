@@ -22,6 +22,7 @@
 #define ERR_IPV6_NOT_SUPPORTED 10
 #define ERR_FRAGMENTED_PACKET 11
 #define ERR_NO_FLOW 12
+#define ERR_UNSPECIFIED 0
 
 
 static struct ndpi_detection_module_struct *ndpi_struct = NULL;
@@ -250,6 +251,7 @@ extern int ndpiPacketProcess(const struct pcap_pkthdr *header, const u_char *pac
     // process the packet
     return packet_processing(time, header, iph, header->len - ip_offset, header->len, (struct ndpi_flow*)flow);
   }
+  return -ERR_UNSPECIFIED;
 }
 
 extern void *ndpiGetFlow(const struct pcap_pkthdr *header, const u_char *packet) {
