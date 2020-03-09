@@ -15,17 +15,16 @@ type MQTTClassifier struct{}
 func (classifier MQTTClassifier) HeuristicClassify(flow *types.Flow) bool {
 	return checkFirstPayload(flow.GetPackets(), layers.LayerTypeTCP,
 		func(payload []byte, packetsRest []gopacket.Packet) bool {
-			//check Control packet (connect)
-			isValidPacket := payload[0] == 0x10
-			//check message lenght
-			isValidLenght := int(payload[1]) == len(payload[2:])
 			if len(payload) < 4 {
 				return false
 			}
+			//check Control packet (connect)
+			isValidPacket := payload[0] == 0x10
+			isValidLength := int(payload[1]) == len(payload[2:])
 			protocolNameStr := string(payload[4:])
 			//check protocol name
 			isValidMQTT := strings.HasPrefix(protocolNameStr, "MQ")
-			return isValidMQTT && isValidLenght && isValidPacket
+			return isValidMQTT && isValidLength && isValidPacket
 		})
 }
 
