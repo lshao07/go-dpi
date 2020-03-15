@@ -9,12 +9,12 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/dreadl0ck/gopacket/layers"
 	"github.com/dreadl0ck/go-dpi/types"
+	"github.com/dreadl0ck/gopacket/layers"
 	"github.com/pkg/errors"
 )
 
-// #cgo LDFLAGS: -llinear
+// #cgo LDFLAGS: -L/usr/local/lib -llinear
 // #include <linear.h>
 // #include "liblinear.h"
 import "C"
