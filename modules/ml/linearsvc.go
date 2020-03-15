@@ -14,7 +14,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// #cgo LDFLAGS: -L/usr/local/lib -llinear
+// #cgo LDFLAGS: -L/lib -L/usr/lib -L/usr/local/lib -L${SRCDIR} -llinear
 // #include <linear.h>
 // #include "liblinear.h"
 import "C"
