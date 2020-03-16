@@ -15,7 +15,7 @@ import (
 )
 
 // #cgo CFLAGS: -I/usr/include -I/usr/local/include
-// #cgo LDFLAGS: -L/lib -L/usr/lib -L/usr/local/lib -L${SRCDIR} -llinear
+// #cgo LDFLAGS: -L/usr/lib -L/usr/local/lib -L${SRCDIR} -llinear
 // #include <linear.h>
 // #include "liblinear.h"
 import "C"
