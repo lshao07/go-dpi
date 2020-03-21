@@ -11,6 +11,11 @@
 
 using namespace std;
 
+struct lpiResult {
+	u_int32_t proto;
+	u_int32_t category;
+};
+
 extern "C"
 int lpiInitLibrary() {
     // Initialize the library
@@ -45,10 +50,13 @@ int lpiAddPacketToFlow(lpi_data_t *data, const void *pktData, unsigned short pkt
 }
 
 extern "C"
-int lpiGuessProtocol(lpi_data_t *data) {
+lpiResult *lpiGuessProtocol(lpi_data_t *data) {
     // Try to classify a flow
+    struct lpiResult* res = new lpiResult;
     auto mod = lpi_guess_protocol(data);
-    return mod->protocol;
+    res->proto = mod->protocol;
+    res->category = mod->category;
+    return res;
 }
 
 extern "C"

@@ -6,12 +6,63 @@ package wrappers
 // #cgo LDFLAGS: -L/usr/lib -L/usr/local/lib -L${SRCDIR} -lprotoident -ltrace
 // #endif
 // #include "LPI_wrapper_impl.hpp"
+// #include <stdlib.h>
 import "C"
 import (
 	"unsafe"
 
 	"github.com/dreadl0ck/go-dpi/types"
 )
+
+// lpiCodeToCategory maps the LPI protocol codes to go-dpi protocols.
+var lpiCodeToCategory = map[uint32]types.Category{
+	0:  types.CATEGORY_WEB,           /* HTTP-based protocols */
+	1:  types.CATEGORY_CHAT,          /* Instant messaging and chatrooms */
+	2:  types.CATEGORY_MAIL,          /* E-mail */
+	3:  types.CATEGORY_P2P,           /* Peer-to-peer uploads and downloads */
+	4:  types.CATEGORY_P2P_STRUCTURE, /* Maintenance of P2P networks */
+	5:  types.CATEGORY_KEY_EXCHANGE,  /* Protocols used to exchange and manage cryptographic keys, e.g. ISAKMP */
+	6:  types.CATEGORY_ECOMMERCE,     /* Financial transaction protocols */
+	7:  types.CATEGORY_GAMING,        /* Game protocols */
+	8:  types.CATEGORY_ENCRYPT,       /* Encrypted traffic that is not clearly part of another category */
+	9:  types.CATEGORY_MONITORING,    /* Network measurement / monitoring */
+	10: types.CATEGORY_NEWS,          /* Newsgroup protocols, e.g. NNTP */
+	11: types.CATEGORY_MALWARE,       /* Viruses, trojans etc. */
+	12: types.CATEGORY_SECURITY,      /* Antivirus and firewall updates */
+	13: types.CATEGORY_ANTISPAM,      /* Anti-spam software update protocols */
+	14: types.CATEGORY_VOIP,          /* Voice chat and Internet telephony protocols */
+	15: types.CATEGORY_TUNNELLING,    /* Tunnelling protocols */
+	16: types.CATEGORY_NAT,           /* NAT traversal protocols */
+	17: types.CATEGORY_STREAMING,     /* Streaming media protocols */
+	18: types.CATEGORY_SERVICES,      /* Basic services, e.g. DNS, NTP */
+	19: types.CATEGORY_DATABASES,     /* Database remote access protocols */
+	20: types.CATEGORY_FILES,         /* Non-P2P file transfer protocols */
+	21: types.CATEGORY_REMOTE,        /* Remote access, e.g. SSH, telnet */
+	22: types.CATEGORY_TELCO,         /* Telco services aside from VOIP, e.g SMS protocols */
+	23: types.CATEGORY_P2PTV,         /* P2P TV, e.g. PPLive */
+	24: types.CATEGORY_RCS,           /* Revision Control */
+	25: types.CATEGORY_LOGGING,       /* Logging */
+	26: types.CATEGORY_PRINTING,      /* Network printing */
+	27: types.CATEGORY_TRANSLATION,   /* Language translation */
+	28: types.CATEGORY_CDN,           /* CDN protocols, e.g. Akamai */
+	29: types.CATEGORY_CLOUD,         /* Cloud computing/storage protocols */
+	30: types.CATEGORY_NOTIFICATION,  /* Notification / messaging protocols */
+	31: types.CATEGORY_SERIALISATION, /* Transfer of programming "objects" */
+	32: types.CATEGORY_BROADCAST,     /* Protocols usually broadcast to the local network */
+	33: types.CATEGORY_LOCATION,      /* Location-related services / GPS */
+	34: types.CATEGORY_CACHING,       /* Proxy cache protocols and similar */
+	35: types.CATEGORY_MOBILE_APP,    /* Mobile apps that don't fit any other category */
+	36: types.CATEGORY_ICS,           /* Industrial control system protocols */
+	37: types.CATEGORY_IPCAMERAS,     /* IP Surveillance Camera protocols */
+	38: types.CATEGORY_MESSAGE_QUEUE, /* Message queuing protocols */
+	39: types.CATEGORY_EDUCATIONAL,   /* Educational applications, e.g. virtual classrooms */
+	40: types.CATEGORY_ICMP,          /* ICMP */
+	41: types.CATEGORY_MIXED,         /* Different protos in each direction */
+	42: types.CATEGORY_NOPAYLOAD,     /* No payload observed */
+	43: types.CATEGORY_UNSUPPORTED,   /* Transport protocol unsupported */
+	44: types.CATEGORY_UNKNOWN,       /* Protocol could not be identified */
+	45: types.CATEGORY_NO_CATEGORY,   /* Protocol has not been placed into a category yet */
+}
 
 // lpiCodeToProtocol maps the LPI protocol codes to go-dpi protocols.
 var lpiCodeToProtocol = map[uint32]types.Protocol{
@@ -580,7 +631,7 @@ func (wrapper *LPIWrapper) DestroyWrapper() error {
 
 // ClassifyFlow classifies a flow using the libprotoident library. It returns
 // the detected protocol and any error.
-func (wrapper *LPIWrapper) ClassifyFlow(flow *types.Flow) (types.Protocol, error) {
+func (wrapper *LPIWrapper) ClassifyFlow(flow *types.Flow) (*types.Classification, error) {
 	lpiFlow := C.lpiCreateFlow()
 	defer C.lpiFreeFlow(lpiFlow)
 	for _, packet := range flow.GetPackets() {
@@ -588,11 +639,15 @@ func (wrapper *LPIWrapper) ClassifyFlow(flow *types.Flow) (types.Protocol, error
 		dataPtr := unsafe.Pointer(&pktData[0])
 		C.lpiAddPacketToFlow(lpiFlow, dataPtr, C.ushort(len(pktData)))
 	}
-	lpiProto := uint32(C.lpiGuessProtocol(lpiFlow))
-	if proto, found := lpiCodeToProtocol[lpiProto]; found {
-		return proto, nil
-	}
-	return types.Unknown, nil
+	lpiResult := (*C.struct_lpiResult)(unsafe.Pointer(C.lpiGuessProtocol(lpiFlow)))
+	defer C.free(unsafe.Pointer(lpiResult))
+
+	cat := lpiCodeToCategory[uint32(lpiResult.category)]
+	proto := lpiCodeToProtocol[uint32(lpiResult.proto)]
+	return &types.Classification{
+		Proto: proto,
+		Class: cat,
+	}, nil
 }
 
 // GetWrapperName returns the name of the wrapper, in order to identify which

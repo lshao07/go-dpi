@@ -332,30 +332,32 @@ func (wrapper *NDPIWrapper) DestroyWrapper() error {
 
 // ClassifyFlow classifies a flow using the nDPI library. It returns the
 // detected protocol and any error.
-func (wrapper *NDPIWrapper) ClassifyFlow(flow *types.Flow) (types.Protocol, error) {
+func (wrapper *NDPIWrapper) ClassifyFlow(flow *types.Flow) (class *types.Classification, err error) {
 	packets := flow.GetPackets()
+	class = &types.Classification{}
 	if len(packets) > 0 {
 		ndpiFlow := (*wrapper.provider).ndpiAllocFlow(packets[0])
 		defer (*wrapper.provider).ndpiFreeFlow(ndpiFlow)
 		for _, ppacket := range packets {
 			ndpiProto := (*wrapper.provider).ndpiPacketProcess(ppacket, ndpiFlow)
 			if proto, found := ndpiCodeToProtocol[uint32(ndpiProto)]; found {
-				return proto, nil
+				class.Proto = proto
+				return
 			} else if ndpiProto < 0 {
 				switch ndpiProto {
 				case -10:
-					return types.Unknown, errors.New("nDPI wrapper does not support IPv6")
+					return nil, errors.New("nDPI wrapper does not support IPv6")
 				case -11:
-					return types.Unknown, errors.New("Received fragmented packet")
+					return nil, errors.New("Received fragmented packet")
 				case -12:
-					return types.Unknown, errors.New("Error creating nDPI flow")
+					return nil, errors.New("Error creating nDPI flow")
 				default:
-					return types.Unknown, errors.New("nDPI unknown error")
+					return nil, errors.New("nDPI unknown error")
 				}
 			}
 		}
 	}
-	return types.Unknown, nil
+	return
 }
 
 // GetWrapperName returns the name of the wrapper, in order to identify which

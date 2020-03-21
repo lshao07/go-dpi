@@ -1,5 +1,61 @@
 package types
 
+type Classification struct {
+	Proto Protocol
+	Class Category
+}
+
+type Category string
+
+const (
+	CATEGORY_WEB           Category = "WEB"
+	CATEGORY_CHAT          Category = "CHAT"
+	CATEGORY_MAIL          Category = "MAIL"
+	CATEGORY_P2P           Category = "P2P"
+	CATEGORY_P2P_STRUCTURE Category = "P2P_STRUCTURE"
+	CATEGORY_KEY_EXCHANGE  Category = "KEY_EXCHANGE"
+	CATEGORY_ECOMMERCE     Category = "ECOMMERCE"
+	CATEGORY_GAMING        Category = "GAMING"
+	CATEGORY_ENCRYPT       Category = "ENCRYPT"
+	CATEGORY_MONITORING    Category = "MONITORING"
+	CATEGORY_NEWS          Category = "NEWS"
+	CATEGORY_MALWARE       Category = "MALWARE"
+	CATEGORY_SECURITY      Category = "SECURITY"
+	CATEGORY_ANTISPAM      Category = "ANTISPAM"
+	CATEGORY_VOIP          Category = "VOIP"
+	CATEGORY_TUNNELLING    Category = "TUNNELLING"
+	CATEGORY_NAT           Category = "NAT"
+	CATEGORY_STREAMING     Category = "STREAMING"
+	CATEGORY_SERVICES      Category = "SERVICES"
+	CATEGORY_DATABASES     Category = "DATABASES"
+	CATEGORY_FILES         Category = "FILES"
+	CATEGORY_REMOTE        Category = "REMOTE"
+	CATEGORY_TELCO         Category = "TELCO"
+	CATEGORY_P2PTV         Category = "P2PTV"
+	CATEGORY_RCS           Category = "RCS"
+	CATEGORY_LOGGING       Category = "LOGGING"
+	CATEGORY_PRINTING      Category = "PRINTING"
+	CATEGORY_TRANSLATION   Category = "TRANSLATION"
+	CATEGORY_CDN           Category = "CDN"
+	CATEGORY_CLOUD         Category = "CLOUD"
+	CATEGORY_NOTIFICATION  Category = "NOTIFICATION"
+	CATEGORY_SERIALISATION Category = "SERIALISATION"
+	CATEGORY_BROADCAST     Category = "BROADCAST"
+	CATEGORY_LOCATION      Category = "LOCATION"
+	CATEGORY_CACHING       Category = "CACHING"
+	CATEGORY_MOBILE_APP    Category = "MOBILE_APP"
+	CATEGORY_ICS           Category = "ICS"
+	CATEGORY_IPCAMERAS     Category = "IPCAMERAS"
+	CATEGORY_MESSAGE_QUEUE Category = "MESSAGE_QUEUE"
+	CATEGORY_EDUCATIONAL   Category = "EDUCATIONAL"
+	CATEGORY_ICMP          Category = "ICMP"
+	CATEGORY_MIXED         Category = "MIXED"
+	CATEGORY_NOPAYLOAD     Category = "NOPAYLOAD"
+	CATEGORY_UNSUPPORTED   Category = "UNSUPPORTED"
+	CATEGORY_UNKNOWN       Category = "UNKNOWN"
+	CATEGORY_NO_CATEGORY   Category = "NO_CATEGORY"
+)
+
 // Protocol is the type of each of the detected protocols.
 type Protocol string
 
@@ -745,10 +801,10 @@ const (
 	//UDP_MYSTERY_QQ            Protocol = "UDP_MYSTERY_QQ"
 	//UDP_MYSTERY_61_72         Protocol = "UDP_MYSTERY_61_72"
 	//UDP_MYSTERY_05            Protocol = "UDP_MYSTERY_05"
-	ICMP                      Protocol = "ICMP"
-	INVALID                   Protocol = "INVALID"
-	NO_PAYLOAD                Protocol = "NO_PAYLOAD"
-	NO_FIRSTPKT               Protocol = "NO_FIRSTPKT"
-	UNSUPPORTED               Protocol = "UNSUPPORTED"
-	UNKNOWN                   Protocol = "UNKNOWN"
+	ICMP        Protocol = "ICMP"
+	INVALID     Protocol = "INVALID"
+	NO_PAYLOAD  Protocol = "NO_PAYLOAD"
+	NO_FIRSTPKT Protocol = "NO_FIRSTPKT"
+	UNSUPPORTED Protocol = "UNSUPPORTED"
+	UNKNOWN     Protocol = "UNKNOWN"
 )

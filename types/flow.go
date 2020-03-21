@@ -21,6 +21,7 @@ type ClassificationSource string
 // the classification from a classification attempt.
 type ClassificationResult struct {
 	Protocol Protocol
+	Class    Category
 	Source   ClassificationSource
 }
 
