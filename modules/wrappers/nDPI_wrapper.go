@@ -335,6 +335,7 @@ func (wrapper *NDPIWrapper) DestroyWrapper() error {
 func (wrapper *NDPIWrapper) ClassifyFlow(flow *types.Flow) (class *types.Classification, err error) {
 	packets := flow.GetPackets()
 	class = &types.Classification{}
+	class.Proto = types.Unknown
 	if len(packets) > 0 {
 		ndpiFlow := (*wrapper.provider).ndpiAllocFlow(packets[0])
 		defer (*wrapper.provider).ndpiFreeFlow(ndpiFlow)
@@ -346,13 +347,13 @@ func (wrapper *NDPIWrapper) ClassifyFlow(flow *types.Flow) (class *types.Classif
 			} else if ndpiProto < 0 {
 				switch ndpiProto {
 				case -10:
-					return nil, errors.New("nDPI wrapper does not support IPv6")
+					return class, errors.New("nDPI wrapper does not support IPv6")
 				case -11:
-					return nil, errors.New("Received fragmented packet")
+					return class, errors.New("Received fragmented packet")
 				case -12:
-					return nil, errors.New("Error creating nDPI flow")
+					return class, errors.New("Error creating nDPI flow")
 				default:
-					return nil, errors.New("nDPI unknown error")
+					return class, errors.New("nDPI unknown error")
 				}
 			}
 		}
