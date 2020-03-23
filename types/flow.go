@@ -117,7 +117,7 @@ func GetFlowForPacket(packet gopacket.Packet) (flow *Flow, isNew bool) {
 		}
 		//ident := packet.NetworkLayer().NetworkFlow().String() + " " + tcp.SrcPort.String() + "->" + tcp.DstPort.String()
 		ident := netFlow.String() + " " + gpktFlow.String()
-		fmt.Println(ident, packet.String())
+		//fmt.Println(ident, packet.String())
 		// make sure two simultaneous calls with the same flow string do not
 		// create a race condition
 		flowTrackerMtx.Lock()
