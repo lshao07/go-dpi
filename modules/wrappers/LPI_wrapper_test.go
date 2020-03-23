@@ -21,7 +21,7 @@ func TestLPIWrapperClassifyFlow(t *testing.T) {
 		}
 
 		// first three packets should not be enough to classify the flow
-		if result, _ := wrapper.ClassifyFlow(flow); result != types.Unknown {
+		if result, _ := wrapper.ClassifyFlow(flow); result.Proto != types.NO_PAYLOAD {
 			t.Errorf("Incorrectly detected %v instead of Unknown", result)
 		}
 
@@ -30,7 +30,7 @@ func TestLPIWrapperClassifyFlow(t *testing.T) {
 		flow.AddPacket(packet)
 
 		// fourth packet should be HTTP
-		if result, _ := wrapper.ClassifyFlow(flow); result != types.HTTP {
+		if result, _ := wrapper.ClassifyFlow(flow); result.Proto != types.HTTP {
 			t.Errorf("Incorrectly detected %v instead of HTTP", result)
 		}
 	case errorLibraryDisabled:

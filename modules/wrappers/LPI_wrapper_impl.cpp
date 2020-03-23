@@ -43,7 +43,7 @@ int lpiAddPacketToFlow(lpi_data_t *data, const void *pktData, unsigned short pkt
     auto packet = trace_create_packet();
 
     trace_construct_packet(packet, TRACE_TYPE_ETH, pktData, pktLen);
-    retVal = lpi_update_data(packet, data, 0);
+    retVal = lpi_update_data(packet, data, 0); // TODO: dir is always 0???
     trace_destroy_packet(packet);
 
     return retVal;
@@ -53,7 +53,7 @@ extern "C"
 lpiResult *lpiGuessProtocol(lpi_data_t *data) {
     // Try to classify a flow
     struct lpiResult* res = new lpiResult;
-    auto mod = lpi_guess_protocol(data);
+    lpi_module_t *mod = lpi_guess_protocol(data);
     res->proto = mod->protocol;
     res->category = mod->category;
     return res;

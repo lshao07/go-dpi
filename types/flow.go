@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/dreadl0ck/gopacket"
+	"github.com/dreadl0ck/gopacket/layers"
 	"github.com/patrickmn/go-cache"
 )
 
@@ -93,6 +94,12 @@ func GetFlowForPacket(packet gopacket.Packet) (flow *Flow, isNew bool) {
 	isNew = true
 	if transport := packet.TransportLayer(); transport != nil {
 		gpktFlow := transport.TransportFlow()
+
+		tcp, ok := transport.(*layers.TCP)
+		if !ok {
+			return
+		}
+
 		srcEp, dstEp := gpktFlow.Endpoints()
 		// require a consistent ordering between the endpoints so that packets
 		// that go in either direction in the flow will map to the same element
@@ -100,17 +107,21 @@ func GetFlowForPacket(packet gopacket.Packet) (flow *Flow, isNew bool) {
 		if dstEp.LessThan(srcEp) {
 			gpktFlow = gpktFlow.Reverse()
 		}
+		ident := packet.NetworkLayer().NetworkFlow().String() + " " + tcp.SrcPort.String() + "->" + tcp.DstPort.String()
+		// gopacket flow infos are actually wrong: port src and dst are incorrect
+		//ident := packet.NetworkLayer().NetworkFlow().String() + " " + transport.Src().String() + "->" + transport.Dst().String()
+		fmt.Println(ident, packet.String())
 		// make sure two simultaneous calls with the same flow string do not
 		// create a race condition
 		flowTrackerMtx.Lock()
-		trackedFlow, ok := flowTracker.Get(gpktFlow.String())
+		trackedFlow, ok := flowTracker.Get(ident)
 		if ok {
 			flow = trackedFlow.(*Flow)
 			isNew = false
 		} else {
 			flow = NewFlow()
 		}
-		flowTracker.Set(gpktFlow.String(), flow, cache.DefaultExpiration)
+		flowTracker.Set(ident, flow, cache.DefaultExpiration)
 		flowTrackerMtx.Unlock()
 		flow.AddPacket(packet)
 	} else {

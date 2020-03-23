@@ -30,9 +30,12 @@ func (wrapper *MockWrapper) DestroyWrapper() error {
 	return nil
 }
 
-func (wrapper *MockWrapper) ClassifyFlow(flow *types.Flow) (types.Protocol, error) {
+func (wrapper *MockWrapper) ClassifyFlow(flow *types.Flow) (*types.Classification, error) {
 	wrapper.classifyCalled = true
-	return types.HTTP, nil
+	return &types.Classification{
+		Proto: types.HTTP,
+		Class: "WEB",
+	}, nil
 }
 
 func (wrapper *MockWrapper) GetWrapperName() types.ClassificationSource {

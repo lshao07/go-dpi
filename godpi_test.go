@@ -1,11 +1,12 @@
 package godpi
 
 import (
-	"github.com/dreadl0ck/go-dpi/types"
-	"github.com/dreadl0ck/go-dpi/utils"
 	"io/ioutil"
 	"path"
 	"testing"
+
+	"github.com/dreadl0ck/go-dpi/types"
+	"github.com/dreadl0ck/go-dpi/utils"
 )
 
 func TestInitializeError(t *testing.T) {
@@ -109,6 +110,7 @@ func TestGetPacketFlow(t *testing.T) {
 	for i := 0; i < 3; i++ {
 		packet := <-dumpPackets
 		flowNext, isNew := GetPacketFlow(packet)
+		// TODO: fix incorrect tests
 		if isNew {
 			t.Error("New flow returned for packet in existing flow")
 		}

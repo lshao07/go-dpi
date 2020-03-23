@@ -30,7 +30,7 @@ func TestNDPIWrapperClassification(t *testing.T) {
 	case 0:
 		defer wrapper.DestroyWrapper()
 		result, err := wrapper.ClassifyFlow(flow)
-		if result != types.HTTP || err != nil {
+		if result.Proto != types.HTTP || err != nil {
 			t.Errorf("Incorrectly detected flow protocol: %v instead of HTTP, error: %v", result, err)
 		}
 	case errorLibraryDisabled:
@@ -95,7 +95,7 @@ func TestNDPIWrapper_ClassifyFlowErrors(t *testing.T) {
 	}
 
 	// empty flow should be unknown
-	if ret, _ := wrapper.ClassifyFlow(types.NewFlow()); ret != types.Unknown {
+	if ret, _ := wrapper.ClassifyFlow(types.NewFlow()); ret.Proto != types.Unknown {
 		t.Errorf("Incorrectly classified empty flow: %v instead of unknown", ret)
 	}
 
