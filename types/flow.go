@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/dreadl0ck/gopacket"
-	"github.com/dreadl0ck/gopacket/layers"
 	"github.com/patrickmn/go-cache"
 )
 
@@ -61,6 +60,19 @@ func (flow *Flow) AddPacket(packet gopacket.Packet) {
 	flow.mtx.Unlock()
 }
 
+// AddPacket adds a new packet to the flow.
+func (flow *Flow) GetDirection(packet gopacket.Packet) int {
+	flow.mtx.Lock()
+	defer flow.mtx.Unlock()
+
+	p := flow.packets[0]
+	if p.NetworkLayer().NetworkFlow().Src() == packet.NetworkLayer().NetworkFlow().Src() {
+		return 0
+	} else {
+		return 1
+	}
+}
+
 // GetPackets returns the list of packets in a thread-safe way.
 func (flow *Flow) GetPackets() (packets []gopacket.Packet) {
 	flow.mtx.RLock()
@@ -94,22 +106,17 @@ func GetFlowForPacket(packet gopacket.Packet) (flow *Flow, isNew bool) {
 	isNew = true
 	if transport := packet.TransportLayer(); transport != nil {
 		gpktFlow := transport.TransportFlow()
-
-		tcp, ok := transport.(*layers.TCP)
-		if !ok {
-			return
-		}
-
+		netFlow := packet.NetworkLayer().NetworkFlow()
 		srcEp, dstEp := gpktFlow.Endpoints()
 		// require a consistent ordering between the endpoints so that packets
 		// that go in either direction in the flow will map to the same element
 		// in the flowTracker map
 		if dstEp.LessThan(srcEp) {
 			gpktFlow = gpktFlow.Reverse()
+			netFlow = netFlow.Reverse()
 		}
-		ident := packet.NetworkLayer().NetworkFlow().String() + " " + tcp.SrcPort.String() + "->" + tcp.DstPort.String()
-		// gopacket flow infos are actually wrong: port src and dst are incorrect
-		//ident := packet.NetworkLayer().NetworkFlow().String() + " " + transport.Src().String() + "->" + transport.Dst().String()
+		//ident := packet.NetworkLayer().NetworkFlow().String() + " " + tcp.SrcPort.String() + "->" + tcp.DstPort.String()
+		ident := netFlow.String() + " " + gpktFlow.String()
 		fmt.Println(ident, packet.String())
 		// make sure two simultaneous calls with the same flow string do not
 		// create a race condition

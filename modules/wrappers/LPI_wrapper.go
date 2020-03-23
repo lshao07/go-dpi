@@ -637,7 +637,7 @@ func (wrapper *LPIWrapper) ClassifyFlow(flow *types.Flow) (*types.Classification
 	for _, packet := range flow.GetPackets() {
 		pktData := packet.Data()
 		dataPtr := unsafe.Pointer(&pktData[0])
-		C.lpiAddPacketToFlow(lpiFlow, dataPtr, C.ushort(len(pktData)))
+		C.lpiAddPacketToFlow(lpiFlow, dataPtr, C.ushort(len(pktData)), C.int(flow.GetDirection(packet)))
 	}
 	lpiResult := (*C.struct_lpiResult)(unsafe.Pointer(C.lpiGuessProtocol(lpiFlow)))
 	defer C.free(unsafe.Pointer(lpiResult))
