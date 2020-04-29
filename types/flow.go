@@ -66,11 +66,14 @@ func (flow *Flow) GetDirection(packet gopacket.Packet) int {
 	defer flow.mtx.Unlock()
 
 	p := flow.packets[0]
-	if p.NetworkLayer().NetworkFlow().Src() == packet.NetworkLayer().NetworkFlow().Src() {
-		return 0
-	} else {
-		return 1
+	if nlFirstPacket, nlCurrPacket := p.NetworkLayer(), packet.NetworkLayer(); nlFirstPacket != nil && nlCurrPacket != nil {
+		if nlFirstPacket.NetworkFlow().Src() == nlCurrPacket.NetworkFlow().Src() {
+			return 0
+		} else {
+			return 1
+		}
 	}
+	return 0
 }
 
 // GetPackets returns the list of packets in a thread-safe way.

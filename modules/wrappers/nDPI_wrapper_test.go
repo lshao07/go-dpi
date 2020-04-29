@@ -30,7 +30,7 @@ func TestNDPIWrapperClassification(t *testing.T) {
 	case 0:
 		defer wrapper.DestroyWrapper()
 		result, err := wrapper.ClassifyFlow(flow)
-		if result.Proto != types.HTTP || err != nil {
+		if err != nil || result.Proto != types.HTTP {
 			t.Errorf("Incorrectly detected flow protocol: %v instead of HTTP, error: %v", result, err)
 		}
 	case errorLibraryDisabled:
