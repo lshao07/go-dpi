@@ -260,7 +260,6 @@ var ndpiCodeToProtocol = map[uint32]types.Protocol{
 	242: types.WHATSAPP_FILES,
 	243: types.TARGUS_GETDATA,
 	244: types.DNP3,
-	//245: types.104,
 }
 
 // NDPIWrapperName is the identification of the nDPI library.

@@ -102,36 +102,44 @@ func (flow *Flow) GetClassificationResult() (result ClassificationResult) {
 	return
 }
 
+// endpointStrFromFlows creates a string that identifies a flow from the
+// network and transport flows of a packet.
+func endpointStrFromFlows(networkFlow, transportFlow gopacket.Flow) string {
+	srcEp, dstEp := transportFlow.Endpoints()
+	// require a consistent ordering between the endpoints so that packets
+	// that go in either direction in the flow will map to the same element
+	// in the flowTracker map
+	if dstEp.LessThan(srcEp) {
+		networkFlow = networkFlow.Reverse()
+		transportFlow = transportFlow.Reverse()
+	}
+	gpktIp1, gpktIp2 := networkFlow.Endpoints()
+	gpktPort1, gpktPort2 := transportFlow.Endpoints()
+	return fmt.Sprintf("%s:%s,%s:%s", gpktIp1, gpktPort1.String(), gpktIp2, gpktPort2.String())
+}
+
 // GetFlowForPacket finds any previous flow that the packet belongs to. It adds
 // the packet to that flow and returns the flow.
 // If no such flow is found, a new one is created.
 func GetFlowForPacket(packet gopacket.Packet) (flow *Flow, isNew bool) {
 	isNew = true
-	if transport := packet.TransportLayer(); transport != nil {
-		gpktFlow := transport.TransportFlow()
-		netFlow := packet.NetworkLayer().NetworkFlow()
-		srcEp, dstEp := gpktFlow.Endpoints()
-		// require a consistent ordering between the endpoints so that packets
-		// that go in either direction in the flow will map to the same element
-		// in the flowTracker map
-		if dstEp.LessThan(srcEp) {
-			gpktFlow = gpktFlow.Reverse()
-			netFlow = netFlow.Reverse()
-		}
-		//ident := packet.NetworkLayer().NetworkFlow().String() + " " + tcp.SrcPort.String() + "->" + tcp.DstPort.String()
-		ident := netFlow.String() + " " + gpktFlow.String()
-		//fmt.Println(ident, packet.String())
+	network := packet.NetworkLayer()
+	transport := packet.TransportLayer()
+	if network != nil && transport != nil {
+		gpktNetworkFlow := network.NetworkFlow()
+		gpktTransportFlow := transport.TransportFlow()
+		flowStr := endpointStrFromFlows(gpktNetworkFlow, gpktTransportFlow)
 		// make sure two simultaneous calls with the same flow string do not
 		// create a race condition
 		flowTrackerMtx.Lock()
-		trackedFlow, ok := flowTracker.Get(ident)
+		trackedFlow, ok := flowTracker.Get(flowStr)
 		if ok {
 			flow = trackedFlow.(*Flow)
 			isNew = false
 		} else {
 			flow = NewFlow()
 		}
-		flowTracker.Set(ident, flow, cache.DefaultExpiration)
+		flowTracker.Set(flowStr, flow, cache.DefaultExpiration)
 		flowTrackerMtx.Unlock()
 		flow.AddPacket(packet)
 	} else {
