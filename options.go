@@ -2,9 +2,9 @@
 package godpi
 
 import (
-	"github.com/mushorg/go-dpi/modules/classifiers"
-	"github.com/mushorg/go-dpi/modules/ml"
-	"github.com/mushorg/go-dpi/types"
+	"github.com/dreadl0ck/go-dpi/modules/classifiers"
+	"github.com/dreadl0ck/go-dpi/modules/ml"
+	"github.com/dreadl0ck/go-dpi/types"
 )
 
 // Options allow end users init module with custom options

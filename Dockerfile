@@ -6,8 +6,8 @@ RUN apt -y install autoconf automake libtool git libpcap-dev libtrace4 libtrace4
 RUN git clone --branch 3.2-stable https://github.com/ntop/nDPI/ /tmp/nDPI
 RUN cd /tmp/nDPI && ./autogen.sh && ./configure && make && make install && cd -
 
-RUN mkdir -p $GOPATH/src/github.com/mushorg/go-dpi
-WORKDIR $GOPATH/src/github.com/mushorg/go-dpi
+RUN mkdir -p $GOPATH/src/github.com/dreadl0ck/go-dpi
+WORKDIR $GOPATH/src/github.com/dreadl0ck/go-dpi
 ADD . .
 RUN go build ./... && \
     go test ./... && \
