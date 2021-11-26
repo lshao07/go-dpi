@@ -70,7 +70,7 @@ extern int ndpiInitialize() {
   size_id_struct = ndpi_detection_get_sizeof_ndpi_id_struct();
   size_flow_struct = ndpi_detection_get_sizeof_ndpi_flow_struct();
 
-  ndpi_finalize_initalization(ndpi_struct);
+  ndpi_finalize_initialization(ndpi_struct);
 
   return 0;
 }
