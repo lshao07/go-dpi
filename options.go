@@ -3,7 +3,6 @@ package godpi
 
 import (
 	"github.com/dreadl0ck/go-dpi/modules/classifiers"
-	"github.com/dreadl0ck/go-dpi/modules/ml"
 	"github.com/dreadl0ck/go-dpi/types"
 )
 
@@ -14,29 +13,29 @@ type Options interface {
 }
 
 // MLOption take ml module options to override default values
-type MLOption struct {
-	TCPModelPath string
-	UDPModelPath string
-	Threshold    float32
-}
+// type MLOption struct {
+// 	TCPModelPath string
+// 	UDPModelPath string
+// 	Threshold    float32
+// }
 
-// Apply ml module option to LinearSVCModule
-func (o MLOption) Apply(mod types.Module) {
-	// check module
-	lsm, ok := mod.(*ml.LinearSVCModule)
-	if !ok {
-		return
-	}
-	if o.TCPModelPath != "" {
-		lsm.TCPModelPath = o.TCPModelPath
-	}
-	if o.UDPModelPath != "" {
-		lsm.UDPModelPath = o.UDPModelPath
-	}
-	if o.Threshold > 0.0 {
-		lsm.Threshold = o.Threshold
-	}
-}
+// // Apply ml module option to LinearSVCModule
+// func (o MLOption) Apply(mod types.Module) {
+// 	// check module
+// 	lsm, ok := mod.(*ml.LinearSVCModule)
+// 	if !ok {
+// 		return
+// 	}
+// 	if o.TCPModelPath != "" {
+// 		lsm.TCPModelPath = o.TCPModelPath
+// 	}
+// 	if o.UDPModelPath != "" {
+// 		lsm.UDPModelPath = o.UDPModelPath
+// 	}
+// 	if o.Threshold > 0.0 {
+// 		lsm.Threshold = o.Threshold
+// 	}
+// }
 
 // ClassifierOption take classifier options to override default values
 // for now this option was added for test
