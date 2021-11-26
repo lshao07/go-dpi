@@ -62,6 +62,7 @@ func main() {
 	default:
 		log.Fatal("nDPI initialization returned error code: ", errCode)
 	}
+	fmt.Println("Init done")
 
 	defer func() {
 		if err := nDPI.DestroyWrapper(); err != nil {
