@@ -21,7 +21,7 @@ func checkTCPNetBIOS(payload []byte, packetsRest []gopacket.Packet) bool {
 	isSessRequest := payload[0] == 0x81 && payload[1] == 0
 	// check for space padding
 	names := bytes.Split(payload[4:], []byte{0})
-	namesHavePadding := len(names) == 3 && names[0][0] == ' ' && names[1][0] == ' '
+	namesHavePadding := len(names) == 3 && len(names[0]) != 0 && len(names[1]) != 0 && names[0][0] == ' ' && names[1][0] == ' '
 	return nbLen+4 == len(payload) && isSessRequest && namesHavePadding
 }
 
